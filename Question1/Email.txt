@@ -1,11 +1,11 @@
 Dear Prof. Zhou:
 
-Homework 0: Sample Homework
+Question 1: Solve Factorial
 
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612
 
-The solution is attached in `Code.py` and the data is attached in `Data.txt`.
+The solution is attached in `Code.py` and the data is attached in `TestData.json`.
 Further DETAILS of the solution is included as `README.md`.
 
 Best Wishes.
