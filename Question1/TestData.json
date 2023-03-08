@@ -1,0 +1,22 @@
+[
+    {
+        "input": "5",
+        "answer": 120
+    },
+    {
+        "input": "12",
+        "answer": 479001600
+    },
+    {
+        "input": "0",
+        "answer": 1
+    },
+    {
+        "input": "-1",
+        "answer": null
+    },
+    {
+        "input": "Hello world",
+        "answer": null
+    }
+]
