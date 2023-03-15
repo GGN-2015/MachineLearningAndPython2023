@@ -18,3 +18,6 @@ Similar to the previous question, frequency spectrum features are often importan
 
 Similar to the previous question, there is also a common shortcut in classifying human voices, which is the fundamental frequency of the voice. In everyday communication, the frequency of male voices is often lower than that of female and child voices. However, this shortcut is not applicable in music, because we cannot tolerate classifying "tenor" as "female voice" or classifying "contralto" as "male voice".
 
+## Furthermore
+
+In my upcoming work, I will focus on researching issues related to Question 1. The singers of the music I study are virtual singers such as Luo Tianyi and Yan He, so the timbre of "human voice" is not the issue I will focus on researching. Due to my limited personal research experience in this area, I would greatly appreciate your valuable guidance.
