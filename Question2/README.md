@@ -14,4 +14,7 @@ However, this approach is not advisable. For example, when we study the probabil
 
 ## Question2: Given a music segment with vocals, analyze whether the voice in this segment is "male," "female," or "child."
 
+Similar to the previous question, frequency spectrum features are often important features in audio analysis. However, as we focus on issues related to vocals, the "Mel-frequency cepstral coefficients (MFCC)" may be more appropriate than commonly used frequency spectrum. Additionally, we may need to apply pre-emphasis to all frequency features to highlight the vocal parts.
+
+Similar to the previous question, there is also a common shortcut in classifying human voices, which is the fundamental frequency of the voice. In everyday communication, the frequency of male voices is often lower than that of female and child voices. However, this shortcut is not applicable in music, because we cannot tolerate classifying "tenor" as "female voice" or classifying "contralto" as "male voice".
 
