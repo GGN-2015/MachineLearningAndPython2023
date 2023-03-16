@@ -1,0 +1,23 @@
+Question 3: fLoadDataMatrix
+Student Name: Guannan Guo (郭冠男)
+Student No. : 21200612
+Subject     : [JLU-HI2023T][21200612]
+
+Dear Professor Zhou,
+
+I am composing this email to submit my assignment and request 
+your review of the work. I would greatly appreciate any constructive 
+feedback or suggestions you may have regarding my submission. In the 
+event that you require any further information or have any inquiries, 
+please do not hesitate to inform me.
+
+Kindly note that the solution has been attached herewith in the `Code.py` 
+file and the relevant data has been included in the TestData.csv file. 
+Additionally, more detailed information pertaining to the solution has 
+been furnished in the README.md file.
+
+Thank you once again for your valuable support and guidance throughout 
+the course.
+
+Best regards,
+Guannan Guo(郭冠男)
