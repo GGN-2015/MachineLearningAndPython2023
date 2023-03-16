@@ -33,6 +33,7 @@ def fLoadDataMatrix(filename):
         for item in line.split(','): # CSV
             lineNow.append(item.strip())
         lines.append(lineNow)
+    # file assertions
     if len(lines) <= 0:
         raise AssertionError("fLoadDataMatrix: csv file should have at least one line.")
     columnIdClass = fFindColumnId(lines[0], "class")
@@ -42,7 +43,7 @@ def fLoadDataMatrix(filename):
         raise AssertionError("fLoadDataMatrix: `class` column shouldn't be the first column")
     for i in range(1, len(lines)):
         if len(lines[i]) != len(lines[0]):
-            raise AssertionError("fLoadDataMatrix: every row should has the same length.")
+            raise AssertionError("fLoadDataMatrix: line %d length error." % (i + 1))
     # we assume that the first column is the object name
     tSample  = []
     tClass   = []
@@ -69,7 +70,6 @@ def fLoadDataMatrix(filename):
         numpy.array(tFeature),
         numpy.array(tMatrix , dtype=numpy.float64),
     )
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
