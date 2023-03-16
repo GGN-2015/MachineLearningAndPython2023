@@ -34,7 +34,7 @@ are considered as data fields, which means that the corresponding
 column features should be recorded in a numerical way. When the file 
 inputted to the program does not meet our requirements, the program 
 will use AssertionError to report an error. The user of the 
-fLoadDataMatrix function can use try to obtain the corresponding error 
+fLoadDataMatrix function can use `try` to obtain the corresponding error 
 information.
 
 ## About TestData
