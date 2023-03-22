@@ -1,22 +1,18 @@
-﻿Question 2: Binary Classification Problems
+﻿Question 2 (Resubmission): Binary Classification Problems
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612
 Subject     : [JLU-HI2023T][21200612]
 
 Dear Professor Zhou,
 
-I am writing this email to submit the assignment and ask for your 
-review on the second assignment.
+Thank you very much for your suggestion. I will carefully 
+consider the consistency of the article in the following 
+assignments. I have made modifications to the binary 
+classification problem in README.md to conform more closely 
+to the definition of binary classification mentioned 
+earlier in the article.
 
-For the sake of maintaining consistency in the file structure, I have 
-placed the descriptions of two binary classification problems in file
-`README.md` . I apologize for any inconvenience this may have caused.
-
-I greatly appreciate your continued support and guidance throughout 
-this course. Should you have any questions or require further 
-information, please do not hesitate to contact me.
-
-Thank you for your time and consideration.
+Thank you again for your time and consideration.
 
 Sincerely,
 Guannan Guo (郭冠男)

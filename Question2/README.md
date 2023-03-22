@@ -1,5 +1,7 @@
 # Binary Classification Questions
 
+**Note: This article has not been extensively modified, only the title of Question2 has been changed. Thank you again for your suggestion.**
+
 In this article, we will propose two binary classification problems related to music and some features that may be associated with these two problems. Based on my previous related practice with these two problems, we will analyze some features to illustrate the difficulties that these two binary classification problems may encounter in future workflow.
 
 ## Question1: Given an audio clip, analyze whether it belongs to the interlude of a song
@@ -12,7 +14,9 @@ In this classification problem, based on our experience, we can obtain an attrac
 
 However, this approach is not advisable. For example, when we study the probability of breast cancer, we may fall into an obvious shortcut: from the perspective of the samples, the probability of women getting breast cancer is often higher than that of men. However, our classifier is meant to classify issues related to breast cancer, not to classify the gender of samples. Therefore, I plan to measure the loudness of the songs first and divide the music segments into several categories based on different loudness levels. Then, I will further design classification algorithms within each category.
 
-## Question2: Given a music segment with vocals, analyze whether the voice in this segment is "male," "female," or "child."
+## Question2: Given a music segment with vocals, analyze whether the voice in this segment is "male voice" or "non-male voice"
+
+**In my previous homework submission, I intended to express the question of distinguishing "male voice" and "non-male voice", but I used an inappropriate expression. Thank you very much for your suggestions on the modification.**
 
 Similar to the previous question, frequency spectrum features are often important features in audio analysis. However, as we focus on issues related to vocals, the "Mel-frequency cepstral coefficients (MFCC)" may be more appropriate than commonly used frequency spectrum. Additionally, we may need to apply pre-emphasis to the frequency features to highlight the vocal parts.
 
