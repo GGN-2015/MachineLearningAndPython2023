@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+import sys
 
 # (Sample, Class, Feature, Matrix) = fLoadDataMatrix(filename)
 def fLoadDataMatrix(filename: str):
@@ -24,18 +25,25 @@ def fSplitPosAndNeg(tMatrix, tClass):
 
 # (tValue, pValue) = fT_test(posSet, negSet)
 def fT_test(posSet, negSet):
-    tValue, pValue = stats.ttest_ind(posSet, negSet, axis=1, equal_var=True, nan_policy='propagate')
-    return tValue, pValue
+    tValues, pValues = stats.ttest_ind(posSet, negSet, axis=1, equal_var=True, nan_policy='propagate')
+    return tValues, pValues
 
 # topFeatureId = fTopFeatureId(tValue)
-def fTopFeatureId(tValue, topN = 10):
-    tValueSorted = list(enumerate(tValue))
-    tValueSorted.sort(key=lambda x:-x[1])
+def fTopFeatureId(pValue, topN = 10):
+    tValueSorted = list(enumerate(pValue))
+    tValueSorted.sort(key=lambda x:x[1])
     return tValueSorted[:topN]
 
-if __name__ == "__main__":
-    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix("ALL3.txt")
+def fShowTopFeaturesInDataFile(filename: str):
+    assert type(filename) == str
+    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(filename)
     posSet, negSet = fSplitPosAndNeg(tMatrix, tClass)
-    tValue, pValue = fT_test(posSet, negSet)
-    topFeatureId = fTopFeatureId(tValue, topN = 10)
-    print(topFeatureId)
+    tValues, pValues = fT_test(posSet, negSet)
+    topFeatureId = fTopFeatureId(pValues, topN = 10)
+    for featureId, pValue in topFeatureId:
+        print("featureId = %6d, featureName = %10s, pValue = %.6f, tValue = %10.6f" % (featureId, tFeature[featureId], pValue, tValues[featureId]))
+
+if __name__ == "__main__":
+    assert len(sys.argv) == 2
+    filename = sys.argv[1]
+    fShowTopFeaturesInDataFile(filename)
