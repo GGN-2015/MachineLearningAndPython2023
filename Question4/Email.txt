@@ -1,11 +1,11 @@
 Dear Prof. Zhou:
 
-Homework 0: Sample Homework
+Homework 4: T-test
 
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612
 
-The solution is attached in `Code.py` and the data is attached in `Data.txt`.
+The solution is attached in `Code.py` and the data is in `ALL3.txt` (not included in the email).
 Further DETAILS of the solution is included as `README.md`.
 
 Best Wishes.

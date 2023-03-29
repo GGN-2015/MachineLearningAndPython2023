@@ -15,13 +15,13 @@ python Code.py ALL3.txt
 If you want to use a different data file as the input for the program, you need to make sure that the data file meets the following conditions:
 1. The first column of the data file contains the names of all the features.
 2. The first row of the data file contains the class labels for all the samples ('POS' or 'NEG').
-3. The adjacent columns of data are separated by '\t' (tab) delimiter.
+3. The adjacent columns of data should be separated by '\t' (tab) delimiter.
 4. The remaining data in the file are floating-point numbers and do not contain NaN or invalid values.
 
 ## Structure of this Project
 
 In the `Code.py` file, there are four functions:
-1. fLoadDataMatrix: used to obtain data from a file
-2. fSplitPosAndNeg: used to separate positive and negative samples in the data matrix
-3. fT_test: used to calculate t-value and p-value based on the separated positive and negative samples
-4. fTopFeatureId: calls the above three functions to complete the entire process of t-test.
+1. fLoadDataMatrix: to obtain data from a file
+2. fSplitPosAndNeg: to separate positive and negative samples in the data matrix
+3. fT_test: to calculate t-value and p-value based on the separated positive and negative samples
+4. fTopFeatureId: to call the three functions above to complete the entire process of t-test.
