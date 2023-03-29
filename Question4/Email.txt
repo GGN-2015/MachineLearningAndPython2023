@@ -1,11 +1,20 @@
-Dear Prof. Zhou:
-
-Homework 4: T-test
-
+Question 4: T-test
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612
+Theme       : [JLU-HI2023T][21200612]
 
-The solution is attached in `Code.py` and the data is in `ALL3.txt` (not included in the email).
-Further DETAILS of the solution is included as `README.md`.
+Dear Professor Zhou,
 
-Best Wishes.
+I am writing this email to submit the assignment and ask for your review,
+I would appreciate any feedback or suggestions you may have. If you have 
+any questions or need any additional information, please do not hesitate 
+to let me know.
+
+The solution is attached in `Code.py` and the data is in `ALL3.txt` (which
+ is not included in the email). Further DETAILS of the solution is included 
+ as `README.md`.
+
+Thank you once again for your support and guidance.
+Best regards,
+
+Guannan Guo(郭冠男)
