@@ -9,7 +9,12 @@ from sklearn.tree            import DecisionTreeClassifier
 
 import numpy as np
 from math import sqrt
+from scipy import stats
 import matplotlib.pyplot as plt
+import pandas as pd
+
+REPEAT    = 3
+TEST_RATE = 0.2
 
 # check the size of data block
 def __fCheckDataAvailable(xTrain, yTrain, xTest, yTest):
@@ -67,7 +72,7 @@ def fRunDTree(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: 
 def fRunLasso(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np.ndarray):
     __fCheckDataAvailable(xTrain, yTrain, xTest, yTest)
     # run knn with default argv
-    clf = LassoCV()
+    clf = LassoCV(cv=3)
     clf.fit(xTrain, yTrain)
     yPred = clf.predict(xTest)
     yPred = (yPred > 0.5).astype(int)
@@ -174,11 +179,13 @@ def fPlot25bars(Plt, statData: dict):
 
 # show a plot in axs(subplot)
 def fRunOnSingleData(axs, xData, yData) -> None:
-    assert type(xData) == np.ndarray
-    assert type(yData) == np.ndarray
+    assert type(xData) == np.ndarray and len(xData.shape) == 2
+    assert xData.shape[0] == type(yData) == np.ndarray
+    assert len(yData)
     def fTestRun(fRunFunc, xData, yData) -> None:
         assert fRunFunc in RUN_FUNCTION_LIST
-        sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, xData, yData, 0.3, 10)
+        sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, 
+                                            xData, yData, TEST_RATE, REPEAT)
         return {
             "func": __fGetFuncName(fRunFunc), 
             "sn": sn, "sp": sp, "acc": acc, "avc": avc, "mcc": mcc
@@ -187,7 +194,6 @@ def fRunOnSingleData(axs, xData, yData) -> None:
     for fRunFunc in RUN_FUNCTION_LIST:
        tmpData = fTestRun(fRunFunc, xData, yData)
        statData[__fGetFuncName(fRunFunc)] = tmpData
-       print(tmpData)
     fPlot25bars(axs, statData)
 
 # this function is only used for test
@@ -198,5 +204,71 @@ def fTestPlt():
     fRunOnSingleData(axs, xData, yData)
     plt.show()
 
+# (Sample, Class, Feature, Matrix) = fLoadDataMatrix(filename)
+def fLoadDataMatrix(filename: str):
+    assert type(filename) == str
+    data = pd.read_table(filename, delimiter="\t", 
+                        header=None, skiprows=[0])
+    tMatrix  = data.iloc[:, 1:].values
+    tFeature = (pd.read_table(filename, delimiter="\t", header=None, usecols=[0]).iloc[1:, :].values.T)[0]
+    tClass   = pd.read_table(filename, delimiter="\t", header=None, nrows=1).values[0][1:]
+    tSample  = np.array(list(range((tMatrix.shape)[1])))
+    return (tSample, tClass, tFeature, tMatrix)
+
+# (posSet, negSet) = fSplitPosAndNeg(tMatrix, tClass)
+def fSplitPosAndNeg(tMatrix, tClass):
+    assert type(tMatrix) == np.ndarray
+    assert type(tClass) == np.ndarray
+    return (
+        tMatrix[:, tClass == "POS"],
+        tMatrix[:, tClass == "NEG"]
+    )
+
+# (tValue, pValue) = fT_test(posSet, negSet)
+def fT_test(posSet, negSet):
+    tValues, pValues = stats.ttest_ind(posSet, negSet, axis=1, equal_var=True, nan_policy='propagate')
+    return tValues, pValues
+
+# (featureId, pValue) = topFeatureId = fTopFeatureId(tValue)
+def fTopFeatureId(pValue):
+    tValueSorted = list(enumerate(pValue))
+    tValueSorted.sort(key=lambda x:x[1])
+    return tValueSorted
+
+# return a list of (featureId, pValue)
+def fGetTopFeatures(filename: str, showList=False):
+    assert type(filename) == str
+    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(filename)
+    posSet, negSet = fSplitPosAndNeg(tMatrix, tClass)
+    tValues, pValues = fT_test(posSet, negSet)
+    topFeatureId = fTopFeatureId(pValues)
+    if showList:
+        for (rank, (featureId, pValue)) in enumerate(topFeatureId):
+            print("rank = %6d, featureId = %6d, featureName = %25s, pValue = %.6f, tValue = %10.6f" % (rank + 1, featureId, tFeature[featureId], pValue, tValues[featureId]))
+    return topFeatureId
+
+# the following function is not designed for generalize
+def fDrawByFeatureIdSet(axs, featureSortedList, lpos, rpos, tClass, tMatrix):
+    featureSortedList = map(lambda x: x[0], featureSortedList[lpos : rpos])
+    xData = [tMatrix[id] for id in featureSortedList]
+    xData = (np.array(xData)).T
+    yData = (tClass == "POS").astype(int)
+    fRunOnSingleData(axs, xData, yData)
+
+# draw top-1, top-10, top-100, end-100
+def fMainPlotFunction():
+    FILENAME = "ALL3.txt"
+    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(FILENAME)
+    topFeatureId = fGetTopFeatures(FILENAME)
+    fig, axs = plt.subplots(nrows=4, ncols=1, figsize=(15, 12))
+    featureCnt = len(tFeature)
+    L     = [0,  0,   0, featureCnt - 100]
+    R     = [1, 10, 100, featureCnt      ]
+    TITLE = ["Top-1", "Top-10", "Top-100", "End-100"]
+    for i in range(4):
+        fDrawByFeatureIdSet(axs[i], topFeatureId, L[i], R[i], tClass, tMatrix)
+        axs[i].set_title(TITLE[i])
+    plt.show()
+
 if __name__ == "__main__":
-    fTestPlt()
+    fMainPlotFunction()
