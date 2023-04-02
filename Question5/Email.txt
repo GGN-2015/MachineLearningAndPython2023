@@ -1,0 +1,24 @@
+Dear Prof. Zhou:
+
+Homework 5: Dot plots of t-test based
+
+Student Name: Guannan Guo (郭冠男)
+Student No. : 21200612
+Subject     : [JLU-HI2023T][21200612]
+
+I am composing this email to submit my assignment and request 
+your review of the work. I would greatly appreciate any constructive 
+feedback or suggestions you may have regarding my submission. In 
+case that you require any further information or have any inquiries, 
+please do not hesitate to inform me.
+
+The solution is attached in `Code.py`, further DETAILS of the 
+solution is included as `README.md`. `ALL3.txt` is used as
+the input data to generate the `PrintScreen.png`, since it is 
+to large to attach, it is not included in the project folder.
+
+Thank you once again for your valuable support and guidance throughout 
+the course.
+
+Best regards,
+Guannan Guo(郭冠男)
