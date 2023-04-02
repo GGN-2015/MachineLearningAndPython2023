@@ -8,7 +8,7 @@ from sklearn.neighbors       import KNeighborsClassifier
 from sklearn.tree            import DecisionTreeClassifier
 
 import numpy as np
-from math import sqrt
+from math import sqrt, isnan
 from scipy import stats
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -33,7 +33,7 @@ def fRunSvm(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np
     __fCheckDataAvailable(xTrain, yTrain, xTest, yTest)
     # run svm with default argv
     # in yTrain and yTest, we use 0 as NEG, 1 as POS
-    clf = svm.SVC(kernel="rbf")
+    clf = svm.SVC(kernel="rbf", C=10)
     clf.fit(xTrain, yTrain)
     yPred = clf.predict(xTest)
     tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
@@ -116,6 +116,11 @@ def __fGetRandomStateByRoundId(rid: int):
 
 DATA_NAME_LIST = ["sn", "sp", "acc", "avc", "mcc"]
 
+def avg(lis: list):
+    assert type(lis) == list
+    # lis = [x for x in lis if not isnan(x)]
+    return sum(lis) / len(lis)
+
 # sn, sp, acc, avc, mcc = fRunAverageSvm(xData, yData, trainTestRate, roundCnt)
 def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float, roundCnt: int):
     assert fRunFunc in RUN_FUNCTION_LIST
@@ -132,7 +137,8 @@ def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float,
     assert snArr is not spArr # make sure the id is different
     for rid in range(roundCnt):
         xTrain, xTest, yTrain, yTest = train_test_split(xData, yData, test_size=testRate,
-                                                        random_state=__fGetRandomStateByRoundId(rid))
+                                                        random_state=__fGetRandomStateByRoundId(rid),
+                                                        stratify=yData)
         # core function call: fRunFunc is a preict model
         tn, fp, fn, tp = fRunFunc(xTrain, yTrain, xTest, yTest)
         sn, sp, acc, avc, mcc = fCalculateFromConfusionMatrix(tn, fp, fn, tp)
@@ -141,8 +147,7 @@ def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float,
         accArr.append(acc)
         avcArr.append(avc)
         mccArr.append(mcc)
-    ansSum = [sum(snArr), sum(spArr), sum(accArr), sum(avcArr), sum(mccArr)]
-    ansAvg = [x / roundCnt for x in ansSum]
+    ansAvg = [avg(snArr), avg(spArr), avg(accArr), avg(avcArr), avg(mccArr)]
     return ansAvg
 
 def __fGetFuncName(func):
