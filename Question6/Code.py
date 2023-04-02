@@ -9,6 +9,7 @@ from sklearn.tree            import DecisionTreeClassifier
 
 import numpy as np
 from math import sqrt
+import matplotlib.pyplot as plt
 
 # check the size of data block
 def __fCheckDataAvailable(xTrain, yTrain, xTest, yTest):
@@ -108,6 +109,8 @@ def __fGetRandomStateByRoundId(rid: int):
         return n
     return nth_prime_number(rid + 1)
 
+DATA_NAME_LIST = ["sn", "sp", "acc", "avc", "mcc"]
+
 # sn, sp, acc, avc, mcc = fRunAverageSvm(xData, yData, trainTestRate, roundCnt)
 def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float, roundCnt: int):
     assert fRunFunc in RUN_FUNCTION_LIST
@@ -120,7 +123,7 @@ def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float,
     testSize  = round(dataSize * testRate)
     trainSize = dataSize - testSize
     assert trainSize > 0 and testSize > 0 # otherwise div 0 will ocurr in the calc step
-    (snArr, spArr, accArr, avcArr, mccArr) = ([], [], [], [], [])
+    (snArr, spArr, accArr, avcArr, mccArr) = [[], [], [], [], []]
     assert snArr is not spArr # make sure the id is different
     for rid in range(roundCnt):
         xTrain, xTest, yTrain, yTest = train_test_split(xData, yData, test_size=testRate,
@@ -137,15 +140,57 @@ def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float,
     ansAvg = [x / roundCnt for x in ansSum]
     return ansAvg
 
+def __fGetFuncName(func):
+    return str(func).split()[1] # get function name
+
+def __fGetColorNameById(id: int):
+    COLORS = ["red", "orange", "green", "blue", "purple"]
+    assert 0 <= id and id < len(COLORS)
+    return COLORS[id]
+
+# there are 25 bars: len(RUN_FUNCTION_LIST) * len([sn, sp, acc, avc, mcc])
+# Plt is usally a subplot
+def fPlot25bars(Plt, statData: dict):
+    assert type(statData) == dict
+    assert len(RUN_FUNCTION_LIST) == 5
+    assert len(DATA_NAME_LIST)    == 5
+    for func in RUN_FUNCTION_LIST:
+        assert statData.get(__fGetFuncName(func)) is not None
+        for dataName in DATA_NAME_LIST:
+            assert statData[__fGetFuncName(func)].get(dataName) is not None
+    datas = [[], [], [], [], []]
+    for i in range(5):
+        for j in range(5):
+            datas[i].append(
+                statData[__fGetFuncName(RUN_FUNCTION_LIST[i])][DATA_NAME_LIST[j]])
+        datas[i] = np.array(datas[i])
+    for i in range(5):
+        Plt.bar(np.arange(5) * 6 + i, datas[i], 
+                color=__fGetColorNameById(i), 
+                label=__fGetFuncName(RUN_FUNCTION_LIST[i])[4:])
+    Plt.legend()
+    Plt.set_xticks(np.arange(7) * 6 + 2)
+    Plt.set_xticklabels(DATA_NAME_LIST + [""] * 2)
+
 # this function is only used for testing
-def fTestRun(fRunFunc) -> None:
-    assert fRunFunc in RUN_FUNCTION_LIST
-    xData, yData = make_classification(n_samples=100, n_features=3, 
-                                       n_informative=2, n_redundant=0, random_state=42)
-    sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, xData, yData, 0.3, 10)
-    print({
-        "sn": sn, "sp": sp, "acc": acc, "avc": avc, "mcc": mcc
-    })
+def fTestRunAll(xData, yData) -> None:
+    def fTestRun(fRunFunc, xData, yData) -> None:
+        assert fRunFunc in RUN_FUNCTION_LIST
+        sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, xData, yData, 0.3, 10)
+        return {
+            "func": __fGetFuncName(fRunFunc), 
+            "sn": sn, "sp": sp, "acc": acc, "avc": avc, "mcc": mcc
+        }
+    statData = {}
+    for fRunFunc in RUN_FUNCTION_LIST:
+       tmpData = fTestRun(fRunFunc, xData, yData)
+       statData[__fGetFuncName(fRunFunc)] = tmpData
+       print(tmpData)
+    fig, axs = plt.subplots()
+    fPlot25bars(axs, statData)
+    plt.show()
 
 if __name__ == "__main__":
-    fTestRun(fRunLasso)
+    xData, yData = make_classification(n_samples=100, n_features=3, 
+                                       n_informative=2, n_redundant=0, random_state=42)
+    fTestRunAll(xData, yData)
