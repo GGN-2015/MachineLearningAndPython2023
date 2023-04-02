@@ -180,8 +180,8 @@ def fPlot25bars(Plt, statData: dict):
 # show a plot in axs(subplot)
 def fRunOnSingleData(axs, xData, yData) -> None:
     assert type(xData) == np.ndarray and len(xData.shape) == 2
-    assert xData.shape[0] == type(yData) == np.ndarray
-    assert len(yData)
+    assert type(yData) == np.ndarray
+    assert xData.shape[0] == len(yData)
     def fTestRun(fRunFunc, xData, yData) -> None:
         assert fRunFunc in RUN_FUNCTION_LIST
         sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, 
