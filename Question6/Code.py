@@ -172,8 +172,10 @@ def fPlot25bars(Plt, statData: dict):
     Plt.set_xticks(np.arange(7) * 6 + 2)
     Plt.set_xticklabels(DATA_NAME_LIST + [""] * 2)
 
-# this function is only used for testing
-def fTestRunAll(xData, yData) -> None:
+# show a plot in axs(subplot)
+def fRunOnSingleData(axs, xData, yData) -> None:
+    assert type(xData) == np.ndarray
+    assert type(yData) == np.ndarray
     def fTestRun(fRunFunc, xData, yData) -> None:
         assert fRunFunc in RUN_FUNCTION_LIST
         sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, xData, yData, 0.3, 10)
@@ -186,11 +188,15 @@ def fTestRunAll(xData, yData) -> None:
        tmpData = fTestRun(fRunFunc, xData, yData)
        statData[__fGetFuncName(fRunFunc)] = tmpData
        print(tmpData)
-    fig, axs = plt.subplots()
     fPlot25bars(axs, statData)
+
+# this function is only used for test
+def fTestPlt():
+    fig, axs = plt.subplots()
+    xData, yData = make_classification(n_samples=100, n_features=3, 
+                                       n_informative=2, n_redundant=0, random_state=42)
+    fRunOnSingleData(axs, xData, yData)
     plt.show()
 
 if __name__ == "__main__":
-    xData, yData = make_classification(n_samples=100, n_features=3, 
-                                       n_informative=2, n_redundant=0, random_state=42)
-    fTestRunAll(xData, yData)
+    fTestPlt()
