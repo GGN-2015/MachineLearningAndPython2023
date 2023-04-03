@@ -8,7 +8,7 @@ from sklearn.neighbors       import KNeighborsClassifier
 from sklearn.tree            import DecisionTreeClassifier
 
 import numpy as np
-from math import sqrt, isnan
+from math import sqrt
 from scipy import stats
 import matplotlib.pyplot as plt
 import pandas as pd
