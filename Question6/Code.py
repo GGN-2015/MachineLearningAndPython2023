@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 REPEAT    = 3
-TEST_RATE = 0.2
+TEST_RATE = 0.3
 
 # check the size of data block
 def __fCheckDataAvailable(xTrain, yTrain, xTest, yTest):
@@ -33,7 +33,12 @@ def fRunSvm(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np
     __fCheckDataAvailable(xTrain, yTrain, xTest, yTest)
     # run svm with default argv
     # in yTrain and yTest, we use 0 as NEG, 1 as POS
-    clf = svm.SVC(kernel="rbf", C=10)
+    assert sum(yTrain == 1) + sum(yTrain == 0) == len(yTrain)
+    clf = svm.SVC(kernel="rbf", 
+                  class_weight={
+                    0: sum(yTrain == 1),
+                    1: sum(yTrain == 0)
+                })
     clf.fit(xTrain, yTrain)
     yPred = clf.predict(xTest)
     tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
