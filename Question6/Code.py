@@ -12,6 +12,7 @@ from math import sqrt
 from scipy import stats
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
 REPEAT    = 3
 TEST_RATE = 0.3
@@ -266,10 +267,9 @@ def fDrawByFeatureIdSet(axs, featureSortedList, lpos, rpos, tClass, tMatrix):
     fRunOnSingleData(axs, xData, yData)
 
 # draw top-1, top-10, top-100, end-100
-def fMainPlotFunction():
-    FILENAME = "ALL3.txt"
-    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(FILENAME)
-    topFeatureId = fGetTopFeatures(FILENAME)
+def fMainPlotFunction(filename):
+    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(filename)
+    topFeatureId = fGetTopFeatures(filename)
     fig, axs = plt.subplots(nrows=4, ncols=1, figsize=(15, 12))
     featureCnt = len(tFeature)
     L     = [0,  0,   0, featureCnt - 100]
@@ -278,7 +278,12 @@ def fMainPlotFunction():
     for i in range(4):
         fDrawByFeatureIdSet(axs[i], topFeatureId, L[i], R[i], tClass, tMatrix)
         axs[i].set_title(TITLE[i])
+    figName = "Ttest Based Training"
+    plt.gcf().canvas.set_window_title(figName)
+    fig.suptitle(figName)
     plt.show()
 
 if __name__ == "__main__":
-    fMainPlotFunction()
+    PATHNAME = os.path.dirname(__file__)
+    FILENAME = PATHNAME + "/" +"ALL3.txt"
+    fMainPlotFunction(FILENAME)

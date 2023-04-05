@@ -1,0 +1,23 @@
+Dear Prof. Zhou:
+
+Homework 6: T-test based training
+
+Student Name: Guannan Guo (郭冠男)
+Student No. : 21200612
+Subject     : [JLU-HI2023T][21200612]
+
+I am writing this email to submit my assignment and kindly 
+request your review of the work. I would greatly appreciate 
+any constructive feedback or suggestions you may have regarding 
+my submission. If you require any further information or have 
+any inquiries, please do not hesitate to inform me.
+
+The solution is attached in `Code.py`, further DETAILS of the 
+solution is included as `README.md`. `ALL3.txt` is used as
+the input data to generate the `PrintScreen.png`, since it is 
+to large to attach, it is not included in the project folder.
+
+Thank you for your time and consideration.
+
+Best regards,
+Guannan Guo(郭冠男)
