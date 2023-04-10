@@ -11,3 +11,6 @@
 6. 列出 SELSEG/POS 和 SELSEG/NEG 中的所有文件名，并存入 DATA 文件夹下的 `RAWTAG_BETA.txt` 文件中，列出 SEG/POS 和 SEG/NEG 中的所有文件名，并存入 DATA 文件夹下的 `RAWTAG_ALPHA.txt` 文件中。（可以看到接下来的分析主要根据 `RAWTAG_BETA.txt` 进行。）`RAWTAG_BETA.txt` 文件中包含若干行，每行形如 `POS SELSEG_00**_ff-ff_tt-tt.mp3` 或者 `NEG SELSEG_00**_ff-ff_tt-tt.mp3`。【暂不处理步骤 8】
 7. 对上述所有内容打包并备份。
 
+## 数据结构化尝试
+
+1. 对所有获得到的音频片段计算梅尔倒谱，得到一个 $13\times 87$ 的数据矩阵，输出到 `DATA/MFCC_ALPHA.txt` 文件中。
