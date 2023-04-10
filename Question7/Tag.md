@@ -7,7 +7,7 @@
 2. 判定是否是间奏的基本原则：意义明确的歌词占主导地位的片段不是间奏，没有明确意义歌词的部分是间奏，人声的存在性不是判别标准。
 3. 使用程序将音乐分为以两秒为单位的片段，如果某一片段被完整地涵盖在间奏中，则称这个片段为间奏片段，如果完全不被涵盖在间奏中，则称其为非间奏片段，其余片段舍弃。
 4. 对于上述产生的片段，命名格式为 `SEG_00**_ff-ff_tt-tt.mp3` 其中 `ff-ff` 表示起始时刻，`tt-tt` 表示终止时刻。将所有的间奏对应的时间片段存储于 SEG/POS 文件夹中，其余文件存放于 SEG/NEG 文件夹中。
-5. 将 SEG 文件中的全部内容复制到 SELSEG 文件夹中，并将所有的文件改名为  `SELSEG_00**_ff-ff_tt-tt.mp3`，手动检查并删除 SELSEG/NEG 文件夹中所有不含人声的文件（注：不对 SELSEG/POS 中的文件进行任何处理）。
-6. 列出 SELSEG/POS 和 SELSEG/NEG 中的所有文件名，并存入 DATA 文件夹下的 `RAWTAG_BETA.txt` 文件中，列出 SEG/POS 和 SEG/NEG 中的所有文件名，并存入 DATA 文件夹下的 `RAWTAG_ALPHA.txt` 文件中。（可以看到接下来的分析主要根据 `RAWTAG_BETA.txt` 进行。）`RAWTAG_BETA.txt` 文件中包含若干行，每行形如 `POS SELSEG_00**_ff-ff_tt-tt.mp3` 或者 `NEG SELSEG_00**_ff-ff_tt-tt.mp3`。
+5. 将 SEG 文件中的全部内容复制到 SELSEG 文件夹中，并将所有的文件改名为  `SELSEG_00**_ff-ff_tt-tt.mp3`，手动检查并删除 SELSEG/NEG 文件夹中所有不含人声的文件（注：不对 SELSEG/POS 中的文件进行任何处理）。【暂不处理步骤 7】
+6. 列出 SELSEG/POS 和 SELSEG/NEG 中的所有文件名，并存入 DATA 文件夹下的 `RAWTAG_BETA.txt` 文件中，列出 SEG/POS 和 SEG/NEG 中的所有文件名，并存入 DATA 文件夹下的 `RAWTAG_ALPHA.txt` 文件中。（可以看到接下来的分析主要根据 `RAWTAG_BETA.txt` 进行。）`RAWTAG_BETA.txt` 文件中包含若干行，每行形如 `POS SELSEG_00**_ff-ff_tt-tt.mp3` 或者 `NEG SELSEG_00**_ff-ff_tt-tt.mp3`。【暂不处理步骤 8】
 7. 对上述所有内容打包并备份。
 
