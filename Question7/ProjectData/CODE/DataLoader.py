@@ -77,7 +77,22 @@ def calculateFromConfusionMatrix(tn: float, fp: float, fn: float, tp: float):
     mcc = (tp * tn - fp * fn) / sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
     return sn, sp, acc, avc, mcc
 
-if __name__ == "__main__":
+# 在某个数据文件上测试 SVC 的效果，可复用
+def testSVConFile(filename):
+    rootDir  = getRootFilePath()
+    tSample, tClass, tFeatures = dataLoader(filename)
+    tn, fp, fn, tp = testSVC(tSample, tClass, tFeatures, 0.2)
+    sn, sp, acc, avc, mcc = calculateFromConfusionMatrix(tn, fp, fn, tp)
+    print({
+        "sn" :  sn,
+        "sp" :  sp,
+        "acc": acc,
+        "avc": avc,
+        "mcc": mcc
+    })
+
+# 不可复用模块
+def testSVConMFCC_ALPHA():
     rootDir  = getRootFilePath()
     dataFile = os.path.join(rootDir, "DATA/MFCC_ALPHA.txt")
     outpFile = os.path.join(rootDir, "DATA/TESTRATE_STAT_ALPHA.json")
@@ -97,3 +112,8 @@ if __name__ == "__main__":
         dataDict[testRate] = dictNow
     with open(outpFile, "w") as fp:
         json.dump(dataDict, fp, indent=4)
+
+if __name__ == "__main__":
+    rootDir = getRootFilePath()
+    filename = os.path.join(rootDir, "DATA/MFCC_VOCAL_ALPHA.txt")
+    testSVConFile(filename)
