@@ -6,3 +6,5 @@ Question7/ProjectData/SEG/*
 Question7/ProjectData/SELSEG/*
 Question7/ProjectData/DATA/*
 *.pyc
+*.wav
+*.mp3
