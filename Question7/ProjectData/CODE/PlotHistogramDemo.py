@@ -11,14 +11,14 @@ ALPHA = 0.3
 
 if __name__ == "__main__":
     rootDir  = getRootFilePath()
-    dataFile = os.path.join(rootDir, "DATA/MFCC_ALPHA.txt") 
+    dataFile = os.path.join(rootDir, "DATA/MFCC_VOCAL_ALPHA.txt") 
     arrPos = []                 # Pos 
     arrNeg = []                 # Neg
     arrAll = []                 # All
     tSample, tClass, tFeatures = dataLoader(dataFile)
     for indx in range(len(tClass)):
         dataNow = tFeatures[indx].reshape((13, 87))
-        maxNow  = np.mean(dataNow[0, :])
+        maxNow  = np.max(dataNow)
         if tClass[indx] == "POS":
             arrPos.append(maxNow)
         else:

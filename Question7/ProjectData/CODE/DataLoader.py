@@ -50,6 +50,21 @@ def testSVC(tSample, tClass, tFeatures, testSize: float):
     tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
     return (tn, fp, fn, tp)
 
+# 根据数据获得支持向量机
+# svm = getSvcOnData(tClass, tFeatures)
+def getSvcOnData(tClass, tFeatures):
+    assert type(tClass   ) == np.ndarray
+    assert type(tFeatures) == np.ndarray
+    xData       = tFeatures
+    yData       = (tClass == "POS").astype(int)
+    classWeight = {
+        0: np.sum(yData), 
+        1: len(yData) - np.sum(yData)
+    }
+    svc = SVC(kernel="rbf", class_weight=classWeight)
+    svc.fit(xData, yData)
+    return svc
+
 # 使用线性核函数的支持向量机进行测试
 # tn, fp, fn, tp = testSVC(tSample, tClass, tFeatures)
 def testSVCFull(tSample, tClass, tFeatures):
@@ -68,7 +83,7 @@ def testSVCFull(tSample, tClass, tFeatures):
     tn, fp, fn, tp = confusion_matrix(yData, yPred).ravel()
     return (tn, fp, fn, tp)
 
-# sn, sp, acc, avc, mcc = fCalculateFromConfusionMatrix(tn, fp, fn, tp)
+# sn, sp, acc, avc, mcc = calculateFromConfusionMatrix(tn, fp, fn, tp)
 def calculateFromConfusionMatrix(tn: float, fp: float, fn: float, tp: float):
     sn  = tp / (tp + fn)
     sp  = tn / (tn + fp)
@@ -79,7 +94,6 @@ def calculateFromConfusionMatrix(tn: float, fp: float, fn: float, tp: float):
 
 # 在某个数据文件上测试 SVC 的效果，可复用
 def testSVConFile(filename):
-    rootDir  = getRootFilePath()
     tSample, tClass, tFeatures = dataLoader(filename)
     tn, fp, fn, tp = testSVC(tSample, tClass, tFeatures, 0.2)
     sn, sp, acc, avc, mcc = calculateFromConfusionMatrix(tn, fp, fn, tp)

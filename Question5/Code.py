@@ -48,14 +48,17 @@ def fGetTopFeatures(filename: str, showList=False):
     return topFeatureId
 
 # draw a scatter on a subplot(axs)
-def fShowScatterOnPlot(plt, featureIdX: int, featureIdY: int, tMatrix: np.ndarray, tClass: np.ndarray):
+def fShowScatterOnPlot(plt, featureIdX: int, featureIdY: int, tMatrix: np.ndarray, tClass: np.ndarray, tFeature: np.ndarray):
     assert type(featureIdX) == int
     assert type(featureIdY) == int
     assert type(tMatrix)    == np.ndarray
     assert type(tClass)     == np.ndarray
+    assert type(tFeature)   == np.ndarray
     (posSet, negSet) = fSplitPosAndNeg(tMatrix, tClass)
     plt.scatter(negSet[featureIdX], negSet[featureIdY], c="blue", label="NEG")
     plt.scatter(posSet[featureIdX], posSet[featureIdY], c="red" , label="POS")
+    plt.set_xlabel(tFeature[featureIdX])
+    plt.set_ylabel(tFeature[featureIdY])
     plt.legend()
 
 # this function is only used in the current program
@@ -71,11 +74,12 @@ def fMainPlotFunction(filename: str, rankPair: list, figName:str):
     for i in range(2):
         for j in range(2):
             rkX, rkY = rankPair[i][j]
-            idX, idY = map(lambda x: tPValueList[x][0], rankPair[i][j])
-            fShowScatterOnPlot(axs[i, j], idX, idY, tMatrix, tClass)
+            idX, idY = map(lambda x: tPValueList[x - 1][0], rankPair[i][j])
+            fShowScatterOnPlot(axs[i, j], idX, idY, tMatrix, tClass, tFeature)
             axs[i, j].set_title("Rank" + str(rkX) + " vs " + "Rank" + str(rkY))
-    plt.gcf().canvas.set_window_title(figName)
+    # plt.gcf().canvas.set_window_title(figName)
     fig.suptitle(figName)
+    fig.subplots_adjust(wspace=0.4, hspace=0.4)
     plt.show()
 
 if __name__ == "__main__":

@@ -1,10 +1,20 @@
 Dear Prof. Zhou:
 
-Homework 5: Dot plots of t-test based
+Homework 5: Dot plots of t-test based (Second Version)
 
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612
 Subject     : [JLU-HI2023T][21200612]
+
+Thank you very much for your suggestion. I have added textual labels 
+to the axes of the illustration based on your advice. In this version, 
+there were ALMOST NO CHANGES except for the code related to displaying 
+axis labels.
+
+Best regards,
+Guannan Guo(郭冠男)
+
+-------------------- LAST SUBMISSION --------------------
 
 I am composing this email to submit my assignment and request 
 your review of the work. I would greatly appreciate any constructive 
