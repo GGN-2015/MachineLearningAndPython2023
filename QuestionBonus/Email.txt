@@ -1,0 +1,24 @@
+Dear Prof. Zhou:
+
+Homework Bonus 3rd : Heatmap for acc of top-N features
+
+Student Name: Guannan Guo (郭冠男)
+Student No. : 21200612
+Subject     : [JLU-HI2023T][21200612]
+
+I am writing this email to submit the assignment and ask for your review,
+I would appreciate any feedback or suggestions you may have. If you have 
+any questions or need any additional information, please do not hesitate 
+to let me know.
+
+The solution is attached in `Code.py`, further DETAILS of the 
+solution is included as `README.md`. `ALL3.txt` is used as
+the input data to generate the `PrintScreen.png`, since it is 
+too large to attach, it is not included in the project folder.
+
+**Thank you once again for your time and consideration. In addition, I humbly 
+request that I be able to see the specific scores for each assignment. If 
+you have the time, I would appreciate your response.**
+
+Best regards,
+Guannan Guo(郭冠男)

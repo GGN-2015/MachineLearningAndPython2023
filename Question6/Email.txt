@@ -1,6 +1,6 @@
 Dear Prof. Zhou:
 
-Homework 6: T-test based training (Bonus)
+Homework 6 (Bonus): T-test based training 
 
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612
