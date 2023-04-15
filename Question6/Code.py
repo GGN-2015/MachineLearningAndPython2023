@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import os
 
-REPEAT    = 3
+REPEAT    = 10
 TEST_RATE = 0.3
 
 # check the size of data block
@@ -127,8 +127,16 @@ def avg(lis: list):
     # lis = [x for x in lis if not isnan(x)]
     return sum(lis) / len(lis)
 
-# sn, sp, acc, avc, mcc = fRunAverageSvm(xData, yData, trainTestRate, roundCnt)
-def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float, roundCnt: int):
+def std(lis: list):
+    assert type(lis) == list
+    n    = len(lis)
+    mean = sum(lis) / n
+    var  = sum([(x - mean) ** 2 for x in lis]) / n
+    std  = sqrt(var)
+    return std
+
+# (sn, sp, acc, avc, mcc), (snStd, spStd, accStd, avcStd, mccStd) = fRunAverageAndStd(xData, yData, trainTestRate, roundCnt)
+def fRunAverageAndStd(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float, roundCnt: int):
     assert fRunFunc in RUN_FUNCTION_LIST
     assert type(roundCnt) == int and roundCnt >= 1
     assert 0 < testRate and testRate < 1 # testRate = testSize / (trainSize + testSize)
@@ -154,7 +162,8 @@ def fRunAverage(fRunFunc, xData: np.ndarray, yData: np.ndarray, testRate: float,
         avcArr.append(avc)
         mccArr.append(mcc)
     ansAvg = [avg(snArr), avg(spArr), avg(accArr), avg(avcArr), avg(mccArr)]
-    return ansAvg
+    ansStd = [std(snArr), std(spArr), std(accArr), std(avcArr), std(mccArr)]
+    return ansAvg, ansStd
 
 def __fGetFuncName(func):
     return str(func).split()[1] # get function name
@@ -174,14 +183,17 @@ def fPlot25bars(Plt, statData: dict):
         assert statData.get(__fGetFuncName(func)) is not None
         for dataName in DATA_NAME_LIST:
             assert statData[__fGetFuncName(func)].get(dataName) is not None
-    datas = [[], [], [], [], []]
+    datas    = [[], [], [], [], []]
+    dataStds = [[], [], [], [], []]
     for i in range(5):
         for j in range(5):
             datas[i].append(
                 statData[__fGetFuncName(RUN_FUNCTION_LIST[i])][DATA_NAME_LIST[j]])
+            dataStds[i].append(
+                statData[__fGetFuncName(RUN_FUNCTION_LIST[i])][DATA_NAME_LIST[j] + "Std"])
         datas[i] = np.array(datas[i])
     for i in range(5):
-        Plt.bar(np.arange(5) * 6 + i, datas[i], 
+        Plt.bar(np.arange(5) * 6 + i, datas[i], yerr=dataStds[i],
                 color=__fGetColorNameById(i), 
                 label=__fGetFuncName(RUN_FUNCTION_LIST[i])[4:])
     Plt.legend()
@@ -195,11 +207,16 @@ def fRunOnSingleData(axs, xData, yData) -> None:
     assert xData.shape[0] == len(yData)
     def fTestRun(fRunFunc, xData, yData) -> None:
         assert fRunFunc in RUN_FUNCTION_LIST
-        sn, sp, acc, avc, mcc = fRunAverage(fRunFunc, 
-                                            xData, yData, TEST_RATE, REPEAT)
+        (sn, sp, acc, avc, mcc), (snStd, spStd, accStd, avcStd, mccStd) = fRunAverageAndStd(fRunFunc, 
+                                                                                            xData, yData, TEST_RATE, REPEAT)
         return {
             "func": __fGetFuncName(fRunFunc), 
-            "sn": sn, "sp": sp, "acc": acc, "avc": avc, "mcc": mcc
+            "sn": sn, "sp": sp, "acc": acc, "avc": avc, "mcc": mcc,
+            "snStd" :  snStd,
+            "spStd" :  spStd,
+            "accStd": accStd,
+            "avcStd": avcStd,
+            "mccStd": mccStd
         }
     statData = {}
     for fRunFunc in RUN_FUNCTION_LIST:
@@ -279,7 +296,7 @@ def fMainPlotFunction(filename):
         fDrawByFeatureIdSet(axs[i], topFeatureId, L[i], R[i], tClass, tMatrix)
         axs[i].set_title(TITLE[i])
     figName = "Ttest Based Training"
-    plt.gcf().canvas.set_window_title(figName)
+    # plt.gcf().canvas.set_window_title(figName)
     fig.suptitle(figName)
     plt.show()
 

@@ -26,7 +26,7 @@ These libraries are used for data manipulation, statistical analysis, and visual
 
 There is a function called `fMainPlotFunction`, which takes a filename as input and produces a plot with four subplots. The subplots show the performance of the models mentioned above on the top 1, top 10, top 100, and end 100 features.
 
-To use this function, you need to have a data matrix file in a specified format. The function `fLoadDataMatrix` is used to load the data matrix from the file. The function `fGetTopFeatures` is used to get the indices of the top features based on a T-test. In our program, we use `ALL3.txt` as our input. In the program, we use $30\%$ of the data as the training set and $70\%$ of the data as the test set. We repeat the experiments three times for each model and calculate the average performance metrics to finally plot a histogram.
+To use this function, you need to have a data matrix file in a specified format. The function `fLoadDataMatrix` is used to load the data matrix from the file. The function `fGetTopFeatures` is used to get the indices of the top features based on a T-test. In our program, we use `ALL3.txt` as our input. In the program, we use $30\%$ of the data as the training set and $70\%$ of the data as the test set. We repeat the experiments ten times for each model and calculate the average performance metrics to finally plot a histogram.
 
 To call the `fMainPlotFunction` function, you can use the following code:
 

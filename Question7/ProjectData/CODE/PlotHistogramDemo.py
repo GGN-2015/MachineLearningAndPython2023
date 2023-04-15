@@ -11,14 +11,14 @@ ALPHA = 0.3
 
 if __name__ == "__main__":
     rootDir  = getRootFilePath()
-    dataFile = os.path.join(rootDir, "DATA/MFCC_VOCAL_ALPHA.txt") 
+    dataFile = os.path.join(rootDir, "DATA/MFCC_ALPHA.txt") 
     arrPos = []                 # Pos 
     arrNeg = []                 # Neg
     arrAll = []                 # All
     tSample, tClass, tFeatures = dataLoader(dataFile)
     for indx in range(len(tClass)):
         dataNow = tFeatures[indx].reshape((13, 87))
-        maxNow  = np.max(dataNow)
+        maxNow  = np.max(dataNow[3 :])
         if tClass[indx] == "POS":
             arrPos.append(maxNow)
         else:
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     plt.figure(figsize=(12, 3))
     plt.hist(npPos, bins=BINS_COUNT, alpha=ALPHA, label="POS", color="red")
     plt.hist(npNeg, bins=BINS_COUNT, alpha=ALPHA, label="NEG", color="blue")
-    plt.hist(npAll, bins=BINS_COUNT, alpha=ALPHA, label="ALL", color="orange")
+    # plt.hist(npAll, bins=BINS_COUNT, alpha=ALPHA, label="ALL", color="orange")
     plt.legend(loc="upper right")
     plt.xlabel('Values')
     plt.ylabel('Frequency')
