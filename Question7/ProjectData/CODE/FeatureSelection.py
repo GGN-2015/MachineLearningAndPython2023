@@ -25,7 +25,7 @@ def getTopFeatureId(pValue, topN = 10):
     tValueSorted.sort(key=lambda x:x[1])
     return tValueSorted[:topN]
 
-# featureIdList = showTopFeaturesInDataFile(filename)
+# featureIdList, fpList = showTopFeaturesInDataFile(filename)
 def showTopFeaturesInDataFile(filename: str):
     assert type(filename) == str
     tSample, tClass, tMatrix = dataLoader(filename)
@@ -36,12 +36,15 @@ def showTopFeaturesInDataFile(filename: str):
     for featureId, pValue in topFeatureId:
         print("featureId = %6d, pValue = %.30f, tValue = %10.6f" % (featureId, pValue, tValues[featureId]))
         featureIdList.append(featureId)
-    return featureIdList
+    return featureIdList, topFeatureId
 
 if __name__ == "__main__":
-    rtDir         = getRootFilePath()
-    dataFile      = os.path.join(rtDir, "DATA/MFCC_ALPHA_ABSTRACT.txt")
-    outputFile    = os.path.join(rtDir, "DATA/MFCC_ABSTRACT_BEST_FEATURE_ID.json")
-    featureIdList = showTopFeaturesInDataFile(dataFile)
+    rtDir                 = getRootFilePath()
+    dataFile              = os.path.join(rtDir, "DATA/MFCC_ALPHA_ABSTRACT.txt")
+    outputFile            = os.path.join(rtDir, "DATA/MFCC_ABSTRACT_BEST_FEATURE_ID.json")
+    outputFileFpList      = os.path.join(rtDir, "DATA/MFCC_ABSTRACT_BEST_FEATURE_ID_AND_PVALUE.json")
+    featureIdList, fpList = showTopFeaturesInDataFile(dataFile)
     with open(outputFile, "w") as fp:
         json.dump(featureIdList, fp)
+    with open(outputFileFpList, "w") as fp:
+        json.dump(fpList, fp)
