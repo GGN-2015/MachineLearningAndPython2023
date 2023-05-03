@@ -9,3 +9,6 @@ Question7/ProjectData/IMG/*
 *.pyc
 *.wav
 *.mp3
+*.pdf
+*.drawio
+*.pptx
