@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 from math import sqrt
+import matplotlib.pyplot as plt
 
 import os
 from sklearn import svm
@@ -9,8 +10,9 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 DIRNAME = os.path.dirname(__file__)
 
-REPEAT    = 10
-TEST_RATE = 0.3
+REPEAT          = 10
+TEST_RATE       = 0.3
+MAX_FEATURE_CNT = 100
 
 # (Sample, Class, Feature, Matrix) = fLoadDataMatrix(filename)
 def fLoadDataMatrix(filename: str):
@@ -107,25 +109,79 @@ def fRunSvm(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np
     tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
     return (tn, fp, fn, tp)
 
-# run svm 10 random class
+# f1score = __getF1Score(tn, fp, fn, tp)
+def __getF1Score(tn, fp, fn, tp):
+    return tp / (tp + (fp + fn) / 2)
+
+# acc = __getF1Score(tn, fp, fn, tp)
+def __getAcc(tn, fp, fn, tp):
+    return (tn + tp) / (tn + tp + fn + fp)
+
+# mean = __getMean(arr)
+def __getMean(arr: list) -> float:
+    return sum(arr) / len(arr)
+
+# syd = __getStd(arr)
+def __getStd(arr: list) -> float:
+    mean = __getMean(arr)
+    sum = 0
+    for x in arr: sum += x * x
+    return sqrt((sum / len(arr)) - mean * mean)
+
+# meanAcc, stdAcc, meanF1, stdF1 = runSvmOnFeatureSet(featureSet, tMatrix, tClass)
 def runSvmOnFeatureSet(featureSet, tMatrix, tClass):
-    xData = tMatrix[featureSet, :]
-    yData = tClass
+    xData = tMatrix[:, featureSet]
+    yData = (tClass == "POS").astype(int)
+    f1Arr  = []
+    accArr = []
     for rid in range(REPEAT):
         xTrain, xTest, yTrain, yTest = train_test_split(xData, yData, test_size=TEST_RATE,
                                                         random_state=__fGetRandomStateByRoundId(rid),
                                                         stratify=yData)
-        # TODO
+        tn, fp, fn, tp = fRunSvm(xTrain, yTrain, xTest, yTest)
+        f1score = __getF1Score(tn, fp, fn, tp)
+        acc     = __getAcc(tn, fp, fn, tp)
+        f1Arr .append(f1score)
+        accArr.append(acc)
+    return __getMean(accArr), __getStd(accArr), __getMean(f1Arr), __getStd(f1Arr)
 
-# sn, sp, acc, avc, mcc = fCalculateFromConfusionMatrix(tn, fp, fn, tp)
-def fCalculateFromConfusionMatrix(tn: float, fp: float, fn: float, tp: float):
-    sn  = tp / (tp + fn)
-    sp  = tn / (tn + fp)
-    acc = (tp + tn) / (tp + tn + fp + fn)
-    avc = (sn + sp) / 2
-    mcc = (tp * tn - fp * fn) / sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
-    return sn, sp, acc, avc, mcc
+# meanAccList, stdAccList, meanF1List, stdF1List = getMeanStdList(topFeatureId, tMatrix, tClass)
+def fGetMeanStdList(topFeatureId, tMatrix, tClass, maxFeatureCnt = MAX_FEATURE_CNT):
+    meanAccList = []
+    stdAccList  = []
+    meanF1List  = []
+    stdF1List   = []
+    for featureCnt in range(1, maxFeatureCnt + 1):
+        featureSet = topFeatureId[:featureCnt]
+        meanAcc, stdAcc, meanF1, stdF1 = runSvmOnFeatureSet(featureSet, tMatrix, tClass)
+        meanAccList.append(meanAcc)
+        stdAccList .append( stdAcc)
+        meanF1List .append(meanF1 )
+        stdF1List  .append( stdF1 )
+    return meanAccList, stdAccList, meanF1List, stdF1List
+
+# plot two lines
+def fPlotLine(meanAccList, stdAccList, meanF1List, stdF1List):
+    assert len(meanAccList) == MAX_FEATURE_CNT
+    assert len( stdAccList) == MAX_FEATURE_CNT
+    assert len( meanF1List) == MAX_FEATURE_CNT
+    assert len(  stdF1List) == MAX_FEATURE_CNT
+    plt.figure(figsize=(18, 6))
+    xId = [x for x in range(1, MAX_FEATURE_CNT + 1)]
+    plt.errorbar(xId, meanAccList, stdAccList, marker='s', color='r', label="acc") #s-:方形
+    plt.errorbar(xId,  meanF1List, stdF1List , marker='o', color='g', label="f1")  #o-:圆形
+    plt.title("acc and f1 on svm with top features")
+    plt.xlabel("number of top features")
+    plt.ylabel("ratio")
+    plt.legend(loc = "best")
+    plt.show()
 
 if __name__ == "__main__":
     filename = os.path.join(DIRNAME, "ALL3.txt")
     topFeatureId = fGetTopFeaturesInDataFile(filename)
+    tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(filename)
+    tMatrix = tMatrix.T
+    meanAccList, stdAccList, meanF1List, stdF1List = (
+        fGetMeanStdList(topFeatureId, tMatrix, tClass)) # get 2 lines
+    fPlotLine(meanAccList, stdAccList, meanF1List, stdF1List)
+    
