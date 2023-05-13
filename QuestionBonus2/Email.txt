@@ -1,0 +1,21 @@
+Dear Prof. Zhou:
+
+Homework Bonus 2: T-test based Incremental Feature Selection for SVM
+
+Student Name: Guannan Guo (郭冠男)
+Student No. : 21200612
+Subject     : [JLU-HI2023T][21200612]
+
+I am writing this email to submit the assignment and ask for your review,
+I would appreciate any feedback or suggestions you may have. If you have 
+any questions or need any additional information, please do not hesitate 
+to let me know.
+
+The solution is attached in `Code.py` and the data is in `ALL3.txt` (which
+ is not included in the email). Further DETAILS of the solution is included 
+ as `README.md`.
+
+Thank you once again for your time and consideration.
+
+Best regards,
+Guannan Guo(郭冠男)
