@@ -1,6 +1,6 @@
 Dear Prof. Zhou:
 
-Homework Bonus 2: T-test based Incremental Feature Selection for SVM
+Homework Bonus 2: T-test based Incremental Feature Selection for SVM/Nbayes/KNN
 
 Student Name: Guannan Guo (郭冠男)
 Student No. : 21200612

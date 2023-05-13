@@ -5,9 +5,11 @@ from math import sqrt
 import matplotlib.pyplot as plt
 
 import os
-from sklearn import svm
-from sklearn.metrics import confusion_matrix
+from sklearn                 import svm
+from sklearn.metrics         import confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes     import GaussianNB
+from sklearn.neighbors       import KNeighborsClassifier
 DIRNAME = os.path.dirname(__file__)
 
 REPEAT          = 10
@@ -109,6 +111,25 @@ def fRunSvm(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np
     tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
     return (tn, fp, fn, tp)
 
+# tn, fp, fn, tp = fRunNbayes(xTrain, yTrain, xTest, yTest)
+def fRunNbayes(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np.ndarray):
+    __fCheckDataAvailable(xTrain, yTrain, xTest, yTest)
+    clf = GaussianNB()
+    clf.fit(xTrain, yTrain)
+    yPred = clf.predict(xTest)
+    tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
+    return (tn, fp, fn, tp)
+
+# tn, fp, fn, tp = fRunKNN(xTrain, yTrain, xTest, yTest)
+def fRunKNN(xTrain: np.ndarray, yTrain: np.ndarray, xTest: np.ndarray, yTest: np.ndarray):
+    __fCheckDataAvailable(xTrain, yTrain, xTest, yTest)
+    # run knn with default argv
+    clf = KNeighborsClassifier()
+    clf.fit(xTrain, yTrain)
+    yPred = clf.predict(xTest)
+    tn, fp, fn, tp = confusion_matrix(yTest, yPred).ravel()
+    return (tn, fp, fn, tp)
+
 # f1score = __getF1Score(tn, fp, fn, tp)
 def __getF1Score(tn, fp, fn, tp):
     return tp / (tp + (fp + fn) / 2)
@@ -129,7 +150,8 @@ def __getStd(arr: list) -> float:
     return sqrt((sum / len(arr)) - mean * mean)
 
 # meanAcc, stdAcc, meanF1, stdF1 = runSvmOnFeatureSet(featureSet, tMatrix, tClass)
-def runSvmOnFeatureSet(featureSet, tMatrix, tClass):
+def runOnFeatureSet(featureSet, __svmFunction, tMatrix, tClass):
+    assert __svmFunction in [fRunSvm, fRunNbayes, fRunKNN]
     xData = tMatrix[:, featureSet]
     yData = (tClass == "POS").astype(int)
     f1Arr  = []
@@ -138,7 +160,7 @@ def runSvmOnFeatureSet(featureSet, tMatrix, tClass):
         xTrain, xTest, yTrain, yTest = train_test_split(xData, yData, test_size=TEST_RATE,
                                                         random_state=__fGetRandomStateByRoundId(rid),
                                                         stratify=yData)
-        tn, fp, fn, tp = fRunSvm(xTrain, yTrain, xTest, yTest)
+        tn, fp, fn, tp = __svmFunction(xTrain, yTrain, xTest, yTest)
         f1score = __getF1Score(tn, fp, fn, tp)
         acc     = __getAcc(tn, fp, fn, tp)
         f1Arr .append(f1score)
@@ -146,14 +168,15 @@ def runSvmOnFeatureSet(featureSet, tMatrix, tClass):
     return __getMean(accArr), __getStd(accArr), __getMean(f1Arr), __getStd(f1Arr)
 
 # meanAccList, stdAccList, meanF1List, stdF1List = getMeanStdList(topFeatureId, tMatrix, tClass)
-def fGetMeanStdList(topFeatureId, tMatrix, tClass, maxFeatureCnt = MAX_FEATURE_CNT):
+def fGetMeanStdList(topFeatureId, __svmFunction, tMatrix, tClass, maxFeatureCnt = MAX_FEATURE_CNT):
+    assert __svmFunction in [fRunSvm, fRunNbayes, fRunKNN]
     meanAccList = []
     stdAccList  = []
     meanF1List  = []
     stdF1List   = []
     for featureCnt in range(1, maxFeatureCnt + 1):
         featureSet = topFeatureId[:featureCnt]
-        meanAcc, stdAcc, meanF1, stdF1 = runSvmOnFeatureSet(featureSet, tMatrix, tClass)
+        meanAcc, stdAcc, meanF1, stdF1 = runOnFeatureSet(featureSet, __svmFunction, tMatrix, tClass)
         meanAccList.append(meanAcc)
         stdAccList .append( stdAcc)
         meanF1List .append(meanF1 )
@@ -161,27 +184,33 @@ def fGetMeanStdList(topFeatureId, tMatrix, tClass, maxFeatureCnt = MAX_FEATURE_C
     return meanAccList, stdAccList, meanF1List, stdF1List
 
 # plot two lines
-def fPlotLine(meanAccList, stdAccList, meanF1List, stdF1List):
+def fPlotLine(fname, meanAccList, stdAccList, meanF1List, stdF1List):
     assert len(meanAccList) == MAX_FEATURE_CNT
     assert len( stdAccList) == MAX_FEATURE_CNT
     assert len( meanF1List) == MAX_FEATURE_CNT
     assert len(  stdF1List) == MAX_FEATURE_CNT
-    plt.figure(figsize=(18, 6))
     xId = [x for x in range(1, MAX_FEATURE_CNT + 1)]
     plt.errorbar(xId, meanAccList, stdAccList, marker='s', color='r', label="acc") #s-:方形
     plt.errorbar(xId,  meanF1List, stdF1List , marker='o', color='g', label="f1")  #o-:圆形
-    plt.title("acc and f1 on svm with top features")
+    plt.title("acc and f1 on %s with top features" % fname)
     plt.xlabel("number of top features")
     plt.ylabel("ratio")
     plt.legend(loc = "best")
-    plt.show()
+
+# fname = __getfName(func)
+def __getfName(func):
+    return str(func).split()[1][4:]
 
 if __name__ == "__main__":
     filename = os.path.join(DIRNAME, "ALL3.txt")
     topFeatureId = fGetTopFeaturesInDataFile(filename)
     tSample, tClass, tFeature, tMatrix = fLoadDataMatrix(filename)
     tMatrix = tMatrix.T
-    meanAccList, stdAccList, meanF1List, stdF1List = (
-        fGetMeanStdList(topFeatureId, tMatrix, tClass)) # get 2 lines
-    fPlotLine(meanAccList, stdAccList, meanF1List, stdF1List)
-    
+    plt.figure(figsize=(19, 10))
+    plt.subplots_adjust(wspace =0, hspace=0.5)
+    for i, __func in enumerate([fRunSvm, fRunNbayes, fRunKNN]):
+        meanAccList, stdAccList, meanF1List, stdF1List = (
+            fGetMeanStdList(topFeatureId, __func, tMatrix, tClass)) # get 2 lines
+        plt.subplot(3, 1, i + 1)
+        fPlotLine(__getfName(__func), meanAccList, stdAccList, meanF1List, stdF1List)
+    plt.show()
