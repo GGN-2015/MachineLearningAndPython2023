@@ -13,7 +13,8 @@ to let me know.
 
 The solution is attached in `Code.py` and the data is in `ALL3.txt` (which
  is not included in the email). Further DETAILS of the solution is included 
- as `README.md`.
+ as `README.md`. From the line chart, it can be seen that the KNN and Naive 
+ Bayes algorithms have a more stable performance compared to SVM.
 
 Thank you once again for your time and consideration.
 
